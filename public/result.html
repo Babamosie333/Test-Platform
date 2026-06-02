@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View your MCQ test result instantly with score summary and next steps." />
+  <title>Test Result</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <header class="hero-header" role="banner">
+    <div class="container">
+      <nav class="topbar" aria-label="Primary navigation">
+        <div class="brand">
+          <span class="brand-mark">MCQ</span>
+          <span class="brand-text">Test Platform</span>
+        </div>
+        <div class="topbar-links">
+          <a href="/tests.html">Browse Tests</a>
+          <a href="/">Home</a>
+        </div>
+      </nav>
+
+      <section class="hero" aria-labelledby="resultTitle">
+        <div class="hero-content">
+          <div class="eyebrow">Assessment complete</div>
+          <h1 id="resultTitle">Your result is ready</h1>
+          <p class="hero-text">
+            Review your score summary below and take another test whenever you are ready.
+          </p>
+        </div>
+
+        <aside class="hero-panel" aria-label="Result overview">
+          <div class="hero-card">
+            <span class="hero-card-label">Instant review</span>
+            <strong>See your performance clearly</strong>
+            <p>Your result card is designed to highlight the important numbers first, then show the next action.</p>
+          </div>
+
+          <div class="hero-mini-grid">
+            <article class="mini-stat">
+              <span>Status</span>
+              <strong>Complete</strong>
+            </article>
+            <article class="mini-stat">
+              <span>View</span>
+              <strong>Score</strong>
+            </article>
+            <article class="mini-stat">
+              <span>Action</span>
+              <strong>Retry</strong>
+            </article>
+            <article class="mini-stat">
+              <span>Mode</span>
+              <strong>Local</strong>
+            </article>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </header>
+
+  <main id="mainContent" class="container">
+    <section class="section" aria-labelledby="summaryTitle">
+      <div class="section-heading">
+        <h2 id="summaryTitle">Score summary</h2>
+        <p>Here is your test output. The content inside this card will be filled dynamically by your JavaScript.</p>
+      </div>
+
+      <div id="resultCard" class="result-card">
+        <div class="result-placeholder">
+          <p>Loading result...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Next actions">
+      <div class="cta-card">
+        <div>
+          <h2>What would you like to do next?</h2>
+          <p>Take another test or go back to the home page.</p>
+        </div>
+
+        <div class="hero-actions">
+          <a href="/tests.html" class="btn btn-primary">Take Another Test</a>
+          <a href="/" class="btn btn-secondary">Home</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/result.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse available MCQ tests and start your practice exam." />
+  <title>Available Tests</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <header class="hero-header" role="banner">
+    <div class="container">
+      <nav class="topbar" aria-label="Primary navigation">
+        <div class="brand">
+          <span class="brand-mark">MCQ</span>
+          <span class="brand-text">Test Platform</span>
+        </div>
+        <div class="topbar-links">
+          <a href="/">Home</a>
+          <a href="/admin/login.html">Admin</a>
+        </div>
+      </nav>
+
+      <section class="hero" aria-labelledby="testsTitle">
+        <div class="hero-content">
+          <div class="eyebrow">Test library</div>
+          <h1 id="testsTitle">Available tests</h1>
+          <p class="hero-text">
+            Browse active tests, review details, and choose the one you want to attempt next.
+          </p>
+        </div>
+
+        <aside class="hero-panel" aria-label="Test overview">
+          <div class="hero-card">
+            <span class="hero-card-label">Quick access</span>
+            <strong>Find your test fast</strong>
+            <p>Only active tests appear here, so you can jump straight into practice without extra steps.</p>
+          </div>
+
+          <div class="hero-mini-grid">
+            <article class="mini-stat">
+              <span>Mode</span>
+              <strong>Browse</strong>
+            </article>
+            <article class="mini-stat">
+              <span>State</span>
+              <strong>Active</strong>
+            </article>
+            <article class="mini-stat">
+              <span>Result</span>
+              <strong>Instant</strong>
+            </article>
+            <article class="mini-stat">
+              <span>Data</span>
+              <strong>Local</strong>
+            </article>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </header>
+
+  <main id="mainContent" class="container">
+    <div id="alert"></div>
+
+    <section class="section" aria-labelledby="listTitle">
+      <div class="section-heading">
+        <h2 id="listTitle">Choose a test</h2>
+        <p>Select any active exam from the cards below to begin.</p>
+      </div>
+
+      <div id="testGrid" class="card-grid"></div>
+      <div id="empty" class="empty-state hidden">No active tests available right now.</div>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/tests.js"></script>
+</body>
+</html>
