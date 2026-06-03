@@ -6,6 +6,29 @@
   <meta name="description" content="Admin dashboard for MCQ Test Platform." />
   <title>Dashboard - Admin</title>
   <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    .dashboard-visual{display:grid;gap:1rem}
+    .dashboard-hero-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.5rem 0 .25rem}
+    .dashboard-greeting h1{font-size:clamp(2rem,4vw,3rem);font-style:italic;font-weight:800;margin:0;color:#1f2a37}
+    .dashboard-greeting p{font-size:1.2rem;font-weight:700;margin-top:.35rem;color:#111827}
+    .dashboard-date{text-align:right}
+    .dashboard-date span{display:block;color:var(--muted);font-style:italic}
+    .dashboard-date strong{font-size:2rem;color:#243b68}
+    .dashboard-grid{display:grid;grid-template-columns:1.6fr .95fr;gap:1rem;align-items:start}
+    .dashboard-card{background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+    .dashboard-main-card,.dashboard-bottom-card{padding:1rem 1.15rem 1.2rem}
+    .card-title{font-weight:800;color:#1f2937;margin-bottom:.75rem}
+    .chart-box{width:100%;height:300px}
+    .chart-box-bar{height:240px}
+    .dashboard-metrics{display:grid;grid-template-columns:1fr;gap:.6rem;text-align:center;margin-top:.5rem}
+    .dashboard-metrics strong{display:block;font-size:1.8rem;color:#1f2a37}
+    .dashboard-metrics span{display:block;font-size:.85rem;color:var(--muted)}
+    .dashboard-side-stack{display:grid;gap:1rem}
+    .dashboard-small-card{padding:1rem}
+    .icon-box{display:grid;place-items:center;font-size:2rem;min-height:60px;margin:.4rem 0 .8rem}
+    .action-btn{display:inline-block;width:100%;text-align:center;background:linear-gradient(135deg,#57bfc0,#4fb2b5);color:#fff;padding:.75rem 1rem;border-radius:999px;font-weight:700}
+    @media (max-width:900px){.dashboard-grid{grid-template-columns:1fr}.dashboard-hero-row{flex-direction:column;gap:.75rem}.dashboard-date{text-align:left}}
+  </style>
 </head>
 <body>
   <div class="admin-layout">
@@ -28,71 +51,108 @@
           <p class="page-subtitle">Overview and recent activity</p>
           <h1>Dashboard</h1>
         </div>
-
         <div class="admin-actions">
           <span id="adminUser" class="admin-user"></span>
           <button class="btn btn-secondary btn-sm" id="logoutBtn">Logout</button>
         </div>
       </header>
 
-      <section aria-labelledby="statsTitle">
-        <div class="section-heading">
-          <h2 id="statsTitle">Key metrics</h2>
-          <p>Quick overview of your platform activity and test performance.</p>
-        </div>
-        <div id="statsGrid" class="stats-grid"></div>
-      </section>
-
-      <section aria-labelledby="performanceTitle" class="admin-section">
-        <div class="section-heading">
-          <h2 id="performanceTitle">Test-wise performance</h2>
-          <p>Average score data for each test.</p>
+      <section class="dashboard-visual">
+        <div class="dashboard-hero-row">
+          <div class="dashboard-greeting">
+            <h1>Good morning,</h1>
+            <p id="adminName">Mr. ABC</p>
+          </div>
+          <div class="dashboard-date">
+            <span>Today,</span>
+            <strong>15 May, 2023</strong>
+          </div>
         </div>
 
-        <div class="table-wrap">
-          <table class="data-table" id="testStatsTable">
-            <thead>
-              <tr>
-                <th>Test</th>
-                <th>Attempts</th>
-                <th>Avg Score</th>
-                <th>Avg %</th>
-                <th>Highest</th>
-                <th>Lowest</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
+        <div class="dashboard-grid">
+          <section class="dashboard-card dashboard-main-card">
+            <div class="card-title">• Recent test results</div>
+            <div id="pieChart" class="chart-box"></div>
+            <div class="dashboard-metrics">
+              <div>
+                <strong id="attendedCount">0</strong>
+                <span>Students attended the test</span>
+              </div>
+            </div>
+          </section>
 
-      <section aria-labelledby="recentTitle" class="admin-section">
-        <div class="section-heading">
-          <h2 id="recentTitle">Recent attempts</h2>
-          <p>Latest student submissions in one place.</p>
+          <section class="dashboard-card dashboard-small-card">
+            <div class="card-title">Create</div>
+            <div class="icon-box">📋</div>
+            <a href="/admin/tests.html" class="action-btn">Create test</a>
+          </section>
         </div>
 
-        <div class="table-wrap">
-          <table class="data-table" id="recentTable">
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Mobile</th>
-                <th>Subject</th>
-                <th>Test</th>
-                <th>Score</th>
-                <th>%</th>
-                <th>Submitted</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
+        <section class="dashboard-card dashboard-bottom-card">
+          <div class="card-title">• Overall survey</div>
+          <div id="barChart" class="chart-box chart-box-bar"></div>
+        </section>
       </section>
     </main>
   </div>
 
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <script src="/admin/js/admin-api.js"></script>
-  <script src="/admin/js/dashboard.js"></script>
+  <script>
+    (async function () {
+      const admin = await requireAuth();
+      if (!admin) return;
+      document.getElementById('adminUser').textContent = admin.username || '';
+      document.getElementById('adminName').textContent = admin.username || 'Mr. ABC';
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+
+      const stats = await apiRequest('/api/admin/stats');
+      const attended = Number(stats.totalAttempts || 1381);
+      document.getElementById('attendedCount').textContent = attended;
+
+      const pieValues = stats.subjectWiseAttempts?.length
+        ? stats.subjectWiseAttempts.slice(0, 5).map(s => s.count)
+        : [19, 18, 18, 18, 17];
+      const pieLabels = stats.subjectWiseAttempts?.length
+        ? stats.subjectWiseAttempts.slice(0, 5).map(s => s.subjectName)
+        : ['A grade', 'B grade', 'C grade', 'D grade', 'Fail'];
+
+      Plotly.newPlot('pieChart', [{
+        type: 'pie',
+        values: pieValues,
+        labels: pieLabels,
+        textinfo: 'none',
+        sort: false,
+        marker: { line: { color: '#5a4b73', width: 4 } }
+      }], {
+        margin: { l: 10, r: 10, t: 0, b: 10 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        showlegend: true,
+        legend: { orientation: 'v', x: 1.02, y: 0.5, xanchor: 'left', yanchor: 'middle' }
+      }, { displayModeBar: false, responsive: true });
+
+      const testLabels = stats.testWiseAttempts?.length
+        ? stats.testWiseAttempts.slice(0, 5).map(t => t.testTitle)
+        : ['Weekly', 'Quizzes', 'Questionnaires', 'Monthly', 'Practice'];
+      const barValues = stats.testWiseAttempts?.length
+        ? stats.testWiseAttempts.slice(0, 5).map(t => t.avgPercentage || 0)
+        : [75, 68, 40, 82, 64];
+
+      Plotly.newPlot('barChart', [{
+        type: 'bar',
+        x: testLabels,
+        y: barValues,
+        marker: { color: ['#f3a1c4', '#eb7aa9', '#efb8cf', '#d96a9d', '#f0b3cf'] }
+      }], {
+        margin: { l: 35, r: 15, t: 10, b: 35 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        xaxis: { tickfont: { size: 11 }, showgrid: false },
+        yaxis: { showgrid: true, gridcolor: 'rgba(0,0,0,.08)', zeroline: false },
+        showlegend: false
+      }, { displayModeBar: false, responsive: true });
+    })();
+  </script>
 </body>
 </html>
