@@ -5,8 +5,8 @@ const Admin = require('../models/Admin');
 
 async function seed() {
   await connectDB();
-  const username = process.env.ADMIN_USERNAME || 'admin';
-  const password = process.env.ADMIN_PASSWORD || 'admin123';
+  const username = process.env.ADMIN_USERNAME || 'Vikram';
+  const password = process.env.ADMIN_PASSWORD || 'vikram123';
 
   const existing = await Admin.findOne({ username });
   if (existing) {
