@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -157,5 +157,403 @@
       </nav>
     </div>
   </footer>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Signal Lost</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --void:    #050509;
+    --deep:    #0a0a14;
+    --cyan:    #00f5d4;
+    --violet:  #9b5de5;
+    --red:     #f72585;
+    --dim:     #1a1a2e;
+    --muted:   #4a4a6a;
+    --white:   #e8e8f0;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--void);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    overflow: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── Canvas starfield ── */
+  #stars {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Scanlines overlay ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,.18) 2px,
+      rgba(0,0,0,.18) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* ── Main container ── */
+  .scene {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    width: 100vw; height: 100vh;
+    gap: 0;
+  }
+
+  /* ── Signal label ── */
+  .signal-label {
+    font-size: .7rem;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    opacity: .7;
+    margin-bottom: 1.6rem;
+    animation: blink 2.4s step-end infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity:.7; }
+    50%      { opacity:.15; }
+  }
+
+  /* ── Giant 404 ── */
+  .hero {
+    position: relative;
+    line-height: .85;
+    user-select: none;
+  }
+  .hero-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(7rem, 22vw, 18rem);
+    letter-spacing: -.02em;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--cyan);
+    position: relative;
+    display: block;
+  }
+
+  /* glitch layers */
+  .hero-text::before,
+  .hero-text::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    -webkit-text-stroke: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  .hero-text::before {
+    color: var(--red);
+    left: 4px;
+    animation: glitch-a 3.5s infinite steps(1);
+  }
+  .hero-text::after {
+    color: var(--violet);
+    left: -4px;
+    animation: glitch-b 3.5s infinite steps(1);
+  }
+
+  @keyframes glitch-a {
+    0%   { clip-path: inset(62% 0 14% 0); transform: translate(0); }
+    5%   { clip-path: inset(10% 0 78% 0); transform: translate(-6px, 2px); }
+    10%  { clip-path: inset(40% 0 42% 0); transform: translate(4px); }
+    15%  { clip-path: inset(80% 0 5%  0); transform: translate(-2px,-3px); }
+    20%  { clip-path: inset(25% 0 60% 0); transform: translate(0); }
+    25%  { clip-path: inset(55% 0 30% 0); transform: translate(7px,1px); }
+    30%  { clip-path: inset(0   0 100%0); transform: translate(0); }
+    100% { clip-path: inset(0   0 100%0); transform: translate(0); }
+  }
+  @keyframes glitch-b {
+    0%   { clip-path: inset(28% 0 52% 0); transform: translate(0); }
+    7%   { clip-path: inset(70% 0 10% 0); transform: translate(8px,-2px); }
+    13%  { clip-path: inset(18% 0 70% 0); transform: translate(-5px,3px); }
+    18%  { clip-path: inset(48% 0 35% 0); transform: translate(3px); }
+    23%  { clip-path: inset(88% 0 2%  0); transform: translate(-3px,-1px); }
+    28%  { clip-path: inset(0   0 100%0); transform: translate(0); }
+    100% { clip-path: inset(0   0 100%0); transform: translate(0); }
+  }
+
+  /* whole-hero shake */
+  .hero { animation: shake 6s infinite; }
+  @keyframes shake {
+    0%,90%,100% { transform: translate(0); }
+    91%  { transform: translate(-3px,1px) skewX(1deg); }
+    92%  { transform: translate(4px,-2px); }
+    93%  { transform: translate(-2px,2px) skewX(-.5deg); }
+    94%  { transform: translate(3px,0); }
+    95%  { transform: translate(0); }
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: clamp(200px, 40vw, 480px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--violet), var(--cyan), transparent);
+    margin: 1.2rem 0 1.4rem;
+    position: relative;
+    overflow: visible;
+  }
+  .divider::after {
+    content: '';
+    position: absolute;
+    top: -3px; left: 0;
+    height: 7px; width: 40%;
+    background: linear-gradient(90deg, transparent, var(--cyan));
+    animation: scan 2.8s ease-in-out infinite;
+  }
+  @keyframes scan {
+    0%   { left: 0;   opacity:1; }
+    100% { left: 100%;opacity:0; }
+  }
+
+  /* ── Sub-copy ── */
+  .message {
+    text-align: center;
+    line-height: 1.7;
+    color: var(--muted);
+    font-size: .75rem;
+    letter-spacing: .06em;
+    max-width: 32ch;
+    margin-bottom: 2.4rem;
+  }
+  .message span { color: var(--white); }
+
+  /* ── CTA button ── */
+  .btn {
+    position: relative;
+    display: inline-block;
+    padding: .75rem 2.4rem;
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--void);
+    background: var(--cyan);
+    border: none;
+    cursor: pointer;
+    outline: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background .2s, color .2s;
+    overflow: hidden;
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--violet);
+    transform: translateX(-101%);
+    transition: transform .35s cubic-bezier(.4,0,.2,1);
+    z-index: 0;
+  }
+  .btn span { position: relative; z-index: 1; }
+  .btn:hover::before { transform: translateX(0); }
+  .btn:hover { color: var(--white); }
+  .btn:active { transform: scale(.96); }
+
+  /* ── Corner decor ── */
+  .corner {
+    position: fixed;
+    width: 60px; height: 60px;
+    opacity: .35;
+    pointer-events: none;
+  }
+  .corner.tl { top: 20px;  left: 20px;  border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+  .corner.tr { top: 20px;  right: 20px; border-top: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+  .corner.bl { bottom: 20px; left: 20px;  border-bottom: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+  .corner.br { bottom: 20px; right: 20px; border-bottom: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+
+  /* ── Status row ── */
+  .status-row {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 2rem;
+    font-size: .6rem;
+    letter-spacing: .15em;
+    color: var(--muted);
+    z-index: 20;
+  }
+  .status-row .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--red);
+    margin-right: .4rem;
+    vertical-align: middle;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .3; transform: scale(.6); }
+  }
+
+  /* ── Mouse-trail effect ── */
+  .spark {
+    position: fixed;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 200;
+    transform: translate(-50%,-50%);
+    animation: spark-fade .6s ease-out forwards;
+  }
+  @keyframes spark-fade {
+    0%   { opacity:1; transform: translate(-50%,-50%) scale(1); }
+    100% { opacity:0; transform: translate(-50%,-50%) scale(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<main class="scene">
+  <p class="signal-label">⬡ signal lost ⬡</p>
+
+  <div class="hero" id="hero">
+    <span class="hero-text" data-text="404" id="heroText">404</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="message">
+    The page you're looking for<br>
+    <span>does not exist in this dimension.</span><br>
+    The signal has been corrupted.
+  </p>
+
+  <button class="btn" onclick="goHome()"><span>↩ Return to Base</span></button>
+</main>
+
+<div class="status-row">
+  <span><span class="dot"></span>ERR_NOT_FOUND</span>
+  <span id="coords">X:0000 Y:0000</span>
+  <span id="clock">00:00:00</span>
+</div>
+
+<script>
+/* ── Starfield ── */
+(function() {
+  const canvas = document.getElementById('stars');
+  const ctx    = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initStars(n = 200) {
+    stars = Array.from({ length: n }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + .2,
+      a: Math.random(),
+      spd: Math.random() * .003 + .001,
+      drift: (Math.random() - .5) * .08
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,210,255,${s.a})`;
+      ctx.fill();
+      s.a += Math.sin(Date.now() * s.spd) * .004;
+      s.a  = Math.max(.05, Math.min(1, s.a));
+      s.x += s.drift;
+      if (s.x < 0) s.x = W;
+      if (s.x > W) s.x = 0;
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); initStars(); });
+  resize(); initStars(); draw();
+})();
+
+/* ── Clock ── */
+function tick() {
+  const n = new Date();
+  const p = v => String(v).padStart(2,'0');
+  document.getElementById('clock').textContent =
+    `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+tick(); setInterval(tick, 1000);
+
+/* ── Cursor coords ── */
+document.addEventListener('mousemove', e => {
+  document.getElementById('coords').textContent =
+    `X:${String(e.clientX).padStart(4,'0')} Y:${String(e.clientY).padStart(4,'0')}`;
+});
+
+/* ── Mouse sparks ── */
+const COLORS = ['#00f5d4','#9b5de5','#f72585','#ffffff'];
+let lastSpark = 0;
+document.addEventListener('mousemove', e => {
+  const now = Date.now();
+  if (now - lastSpark < 40) return;
+  lastSpark = now;
+  const el = document.createElement('div');
+  el.className = 'spark';
+  el.style.left = e.clientX + 'px';
+  el.style.top  = e.clientY + 'px';
+  el.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
+  el.style.width = el.style.height = (Math.random() * 6 + 3) + 'px';
+  document.body.appendChild(el);
+  el.addEventListener('animationend', () => el.remove());
+});
+
+/* ── Click ripple on hero ── */
+document.getElementById('heroText').addEventListener('click', function() {
+  this.style.transition = 'transform .1s';
+  this.style.transform  = 'scale(1.04)';
+  setTimeout(() => { this.style.transform = ''; }, 150);
+
+  // random extra glitch burst
+  const hero = document.getElementById('hero');
+  hero.style.animation = 'none';
+  void hero.offsetWidth;
+  hero.style.animation = '';
+});
+
+/* ── Go home ── */
+function goHome() {
+  document.querySelector('.scene').style.transition = 'opacity .5s';
+  document.querySelector('.scene').style.opacity    = '0';
+  setTimeout(() => window.location.href = '/', 500);
+}
+</script>
 </body>
 </html>
