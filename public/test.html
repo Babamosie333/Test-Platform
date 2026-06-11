@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Start your MCQ test with a clean timed exam interface." />
+  <meta name="description" content="Start your MCQ test in a clean timed exam interface." />
   <title>Take Test</title>
   <link rel="stylesheet" href="/css/style.css" />
 </head>
@@ -18,7 +18,7 @@
           <span class="brand-text">Test Platform</span>
         </div>
         <div class="topbar-links">
-          <a href="/tests.html">Browse Tests</a>
+          <a href="/tests.html">Tests</a>
           <a href="/">Home</a>
         </div>
       </nav>
@@ -28,15 +28,15 @@
           <div class="eyebrow">Timed exam</div>
           <h1 id="testPageTitle">Start your test</h1>
           <p class="hero-text" id="testMeta">
-            Enter your details below, then begin the exam in a distraction-free layout.
+            Enter your details, then begin the exam in a focused layout.
           </p>
         </div>
 
         <aside class="hero-panel" aria-label="Exam tips">
           <div class="hero-card">
             <span class="hero-card-label">Before you start</span>
-            <strong>Prepare your details</strong>
-            <p>Make sure your name and mobile number are correct before beginning the test.</p>
+            <strong>Check your details</strong>
+            <p>Make sure your name and mobile number are correct before beginning.</p>
           </div>
 
           <div class="hero-mini-grid">
@@ -64,7 +64,7 @@
 
   <div id="timerBar" class="timer-bar hidden" aria-live="polite">
     <span>Time left: <span id="timerDisplay">--:--</span></span>
-    <button class="btn btn-secondary btn-sm" id="submitBtn" type="button">Submit Test</button>
+    <button class="btn btn-secondary btn-sm" id="submitBtn" type="button">Submit</button>
   </div>
 
   <main id="mainContent" class="container">
@@ -73,7 +73,7 @@
     <section id="startSection" class="form-panel" aria-labelledby="startTitle">
       <div class="section-heading">
         <h2 id="startTitle">Enter your details</h2>
-        <p>Use your real name and mobile number so the result screen stays accurate.</p>
+        <p>Use your real name and mobile number so your result stays accurate.</p>
       </div>
 
       <form id="startForm">
@@ -97,20 +97,20 @@
         <button type="submit" class="btn btn-primary btn-block">Start Test</button>
       </form>
 
-      <p style="margin-top:1rem;">
-        <a href="/tests.html">← Back to tests</a>
+      <p class="back-link">
+        <a href="/tests.html">Back to tests</a>
       </p>
     </section>
 
     <section id="examSection" class="hidden" aria-labelledby="questionsTitle">
       <div class="section-heading">
         <h2 id="questionsTitle">Questions</h2>
-        <p>Answer each question carefully, then submit before the timer ends.</p>
+        <p>Answer carefully, then submit before the timer ends.</p>
       </div>
 
       <div id="questionsContainer"></div>
 
-      <button class="btn btn-primary btn-block" id="submitBtnBottom" type="button" style="margin:1.5rem 0;">
+      <button class="btn btn-primary btn-block" id="submitBtnBottom" type="button">
         Submit Test
       </button>
     </section>

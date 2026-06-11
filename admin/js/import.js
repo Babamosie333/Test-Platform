@@ -3,6 +3,12 @@
   const alertEl = document.getElementById('alert');
   const summaryEl = document.getElementById('summary');
 
+  const cleanText = (v) => String(v ?? '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
   document.getElementById('importForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     alertEl.innerHTML = '';
@@ -32,17 +38,14 @@
         <p><strong>Total rows:</strong> ${data.totalRows}</p>
         <p><strong>Success:</strong> ${data.successCount}</p>
         <p><strong>Failed:</strong> ${data.failedCount}</p>
-        ${
-          data.failedRows?.length
-            ? `<div class="failed-rows"><strong>Failed rows:</strong><ul>${data.failedRows
-                .map((r) => `<li>Row ${r.row}: ${r.errors.join(', ')}</li>`)
-                .join('')}</ul></div>`
-            : ''
-        }`;
+        ${data.failedRows?.length ? `<div class="failed-rows"><strong>Failed rows:</strong><ul>${data.failedRows.map((r) => `<li>Row ${r.row}: ${r.errors.join(', ')}</li>`).join('')}</ul></div>` : ''}
+      `;
       showAlert(alertEl, 'Import completed', 'success');
       fileInput.value = '';
     } catch (err) {
       showAlert(alertEl, err.message);
     }
   });
+
+  window.cleanText = cleanText;
 })();

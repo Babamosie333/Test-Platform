@@ -17,8 +17,12 @@
     const preselect = getQueryParam('testId');
     if (preselect) {
       testSelect.value = preselect;
-      loadQuestions();
+      await loadQuestions();
     }
+  }
+
+  function renderOption(label, value) {
+    return `<div class="option-line"><span class="option-label">${label}:</span> ${value || ''}</div>`;
   }
 
   async function loadQuestions() {
@@ -28,29 +32,28 @@
       addBtn.disabled = true;
       return;
     }
+
     addBtn.disabled = false;
     currentTest = await apiRequest(`/api/tests/${testId}`);
     questions = await apiRequest(`/api/tests/${testId}/questions?admin=true`);
 
-    questionsList.innerHTML =
-      questions.length > 0
-        ? questions
-            .map(
-              (q, i) => `
+    questionsList.innerHTML = questions.length > 0
+      ? questions.map((q, i) => `
         <div class="question-block">
           <h4>Q${i + 1}. ${q.questionText}</h4>
-          <p style="color:var(--muted);font-size:0.9rem;">
-            A: ${q.options.A} | B: ${q.options.B} | C: ${q.options.C} | D: ${q.options.D}<br>
-            Correct: <strong>${q.correctOption}</strong> | Marks: ${q.marks}
-          </p>
+          <div class="question-meta">
+            ${renderOption('A', q.options?.A)}
+            ${renderOption('B', q.options?.B)}
+            ${renderOption('C', q.options?.C)}
+            ${renderOption('D', q.options?.D)}
+            <div><strong>Correct:</strong> ${q.correctOption || '-'} | <strong>Marks:</strong> ${q.marks ?? 1}</div>
+          </div>
           <div class="table-actions" style="margin-top:0.75rem;">
             <button class="btn btn-secondary btn-sm" data-edit="${q._id}">Edit</button>
             <button class="btn btn-danger btn-sm" data-delete="${q._id}">Delete</button>
           </div>
-        </div>`
-            )
-            .join('')
-        : '<p class="empty-state">No questions for this test</p>';
+        </div>`).join('')
+      : '<p class="empty-state">No questions for this test</p>';
 
     questionsList.querySelectorAll('[data-edit]').forEach((btn) => {
       btn.addEventListener('click', () => openEdit(btn.dataset.edit));
@@ -73,13 +76,13 @@
     if (!q) return;
     document.getElementById('modalTitle').textContent = 'Edit Question';
     document.getElementById('questionId').value = q._id;
-    document.getElementById('questionText').value = q.questionText;
-    document.getElementById('optA').value = q.options.A;
-    document.getElementById('optB').value = q.options.B;
-    document.getElementById('optC').value = q.options.C;
-    document.getElementById('optD').value = q.options.D;
-    document.getElementById('correctOption').value = q.correctOption;
-    document.getElementById('marks').value = q.marks;
+    document.getElementById('questionText').value = q.questionText || '';
+    document.getElementById('optA').value = q.options?.A || '';
+    document.getElementById('optB').value = q.options?.B || '';
+    document.getElementById('optC').value = q.options?.C || '';
+    document.getElementById('optD').value = q.options?.D || '';
+    document.getElementById('correctOption').value = q.correctOption || 'A';
+    document.getElementById('marks').value = q.marks ?? 1;
     modal.classList.remove('hidden');
   }
 
@@ -88,7 +91,7 @@
     try {
       await apiRequest(`/api/questions/${id}`, { method: 'DELETE' });
       showAlert(alertEl, 'Question deleted', 'success');
-      loadQuestions();
+      await loadQuestions();
     } catch (err) {
       showAlert(alertEl, err.message);
     }
@@ -97,6 +100,7 @@
   testSelect.addEventListener('change', loadQuestions);
   addBtn.addEventListener('click', openAdd);
   document.getElementById('cancelBtn').addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('cancelBtnBottom').addEventListener('click', () => modal.classList.add('hidden'));
 
   document.getElementById('questionForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -114,6 +118,7 @@
       correctOption: document.getElementById('correctOption').value,
       marks: Number(document.getElementById('marks').value),
     };
+
     try {
       if (id) {
         await apiRequest(`/api/questions/${id}`, { method: 'PUT', body: JSON.stringify(body) });
@@ -122,7 +127,7 @@
       }
       modal.classList.add('hidden');
       showAlert(alertEl, 'Question saved', 'success');
-      loadQuestions();
+      await loadQuestions();
     } catch (err) {
       showAlert(alertEl, err.message);
     }
